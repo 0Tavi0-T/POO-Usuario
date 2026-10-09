@@ -454,6 +454,275 @@ p {
   color: #b4c1ba;
 }
 
+.auth-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.88fr);
+  align-items: center;
+  gap: 82px;
+  padding: 66px 0 72px;
+}
+
+.auth-intro h1 {
+  margin: 0 0 18px;
+  color: #193b36;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 46px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.auth-intro .intro {
+  margin-bottom: 28px;
+}
+
+.demo-profile {
+  display: grid;
+  gap: 7px;
+  padding: 15px 17px;
+  border-left: 3px solid #c6ed70;
+  background: #eaf0ec;
+}
+
+.demo-label {
+  color: #75877e;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.demo-profile strong {
+  color: #284a3f;
+  font-size: 13px;
+}
+
+.demo-profile strong span {
+  padding: 0 4px;
+  color: #95a69c;
+}
+
+.demo-profile p {
+  margin: 0;
+  color: #6d8177;
+  font-size: 11px;
+}
+
+.demo-profile b {
+  color: #345b46;
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 1px;
+}
+
+.auth-panel {
+  padding: 35px 32px 29px;
+  border: 1px solid #e3eae6;
+  border-radius: 7px;
+  background: #fff;
+  box-shadow: 0 16px 42px rgba(35, 69, 56, 0.045);
+}
+
+.auth-panel .transaction-heading h2 {
+  margin-bottom: 25px;
+}
+
+.auth-form {
+  display: grid;
+  gap: 9px;
+}
+
+.auth-form label {
+  margin-top: 3px;
+  color: #445b52;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.auth-form input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 13px;
+  border: 1px solid #dce6e0;
+  border-radius: 4px;
+  outline: 0;
+  background: #fff;
+  color: #213e37;
+  font-size: 14px;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.auth-form input:focus {
+  border-color: #64a783;
+  box-shadow: 0 0 0 3px rgba(100, 167, 131, 0.13);
+}
+
+.auth-form .submit-button {
+  margin-top: 11px;
+}
+
+.auth-link {
+  display: block;
+  margin: 18px auto 0;
+  padding: 5px;
+  border: 0;
+  background: transparent;
+  color: #397454;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.auth-link:hover {
+  color: #214c35;
+  text-decoration: underline;
+}
+
+.auth-link:focus-visible,
+.logout-button:focus-visible {
+  outline: 2px solid #39815b;
+  outline-offset: 3px;
+}
+
+.auth-panel > .feedback {
+  margin-top: 18px;
+}
+
+.logout-button {
+  padding: 8px 0 8px 8px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.logout-button span {
+  color: #4d8c6b;
+  font-size: 16px;
+}
+
+.workspace-nav {
+  display: flex;
+  gap: 26px;
+  border-bottom: 1px solid #dce5e0;
+}
+
+.workspace-tab {
+  position: relative;
+  min-height: 48px;
+  padding: 0 2px;
+  border: 0;
+  background: transparent;
+  color: #73867d;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.workspace-tab.active {
+  color: #264b3b;
+}
+
+.workspace-tab.active::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: #6ca77a;
+  content: '';
+}
+
+.workspace-tab:focus-visible {
+  outline: 2px solid #39815b;
+  outline-offset: 3px;
+}
+
+.email-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(370px, 1.1fr);
+  align-items: center;
+  gap: 72px;
+  padding: 52px 0 60px;
+}
+
+.email-intro h1 {
+  margin: 0 0 18px;
+  color: #193b36;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 43px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.email-intro .intro {
+  margin-bottom: 26px;
+}
+
+.email-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 390px;
+  padding-top: 16px;
+  border-top: 1px solid #dce5e0;
+}
+
+.email-note > span {
+  color: #4d8c6b;
+  font-size: 18px;
+}
+
+.email-note p {
+  margin: 0;
+  color: #778980;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.email-panel {
+  padding: 32px;
+  border: 1px solid #e3eae6;
+  border-radius: 7px;
+  background: #fff;
+  box-shadow: 0 16px 42px rgba(35, 69, 56, 0.045);
+}
+
+.email-panel .transaction-heading h2 {
+  margin-bottom: 23px;
+}
+
+.email-form textarea {
+  width: 100%;
+  min-height: 132px;
+  padding: 12px 13px;
+  border: 1px solid #dce6e0;
+  border-radius: 4px;
+  outline: 0;
+  background: #fff;
+  color: #213e37;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.email-form textarea:focus {
+  border-color: #64a783;
+  box-shadow: 0 0 0 3px rgba(100, 167, 131, 0.13);
+}
+
+.email-form input::placeholder,
+.email-form textarea::placeholder {
+  color: #a6b4ac;
+}
+
+.email-panel > .feedback {
+  margin-top: 16px;
+}
+
 @media (max-width: 900px) {
   .banking-app {
     padding: 0 36px;
@@ -475,6 +744,28 @@ p {
 
   .transaction {
     padding: 28px 24px 23px;
+  }
+
+  .auth-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.95fr);
+    gap: 36px;
+  }
+
+  .auth-intro h1 {
+    font-size: 39px;
+  }
+
+  .auth-panel {
+    padding: 30px 24px 25px;
+  }
+
+  .email-layout {
+    grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+    gap: 36px;
+  }
+
+  .email-panel {
+    padding: 28px 24px;
   }
 }
 
@@ -524,6 +815,42 @@ p {
     padding: 27px 22px 22px;
   }
 
+  .auth-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    padding: 43px 0 48px;
+  }
+
+  .auth-intro h1 {
+    font-size: 38px;
+  }
+
+  .auth-intro .intro {
+    margin-bottom: 19px;
+  }
+
+  .auth-panel {
+    padding: 27px 22px 22px;
+  }
+
+  .email-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    padding: 43px 0 48px;
+  }
+
+  .email-intro h1 {
+    font-size: 38px;
+  }
+
+  .email-intro .intro {
+    margin-bottom: 19px;
+  }
+
+  .email-panel {
+    padding: 27px 22px 22px;
+  }
+
   .page-footer {
     min-height: 58px;
   }
@@ -543,6 +870,14 @@ p {
   }
 
   .transaction {
+    padding-inline: 17px;
+  }
+
+  .auth-panel {
+    padding-inline: 17px;
+  }
+
+  .email-panel {
     padding-inline: 17px;
   }
 }
