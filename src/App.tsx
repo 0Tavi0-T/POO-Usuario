@@ -1,20 +1,24 @@
 import { useState, type FormEvent } from 'react'
-import { ContaBancaria } from './ContaBancaria'
-import { Email } from './Email'
-import { Usuario } from './Usuario'
+import { Administrador } from './models/Administrador'
+import { ContaBancaria } from './models/ContaBancaria'
+import { Email } from './models/Email'
 import './App.css'
 
 function App() {
-  const [usuario] = useState(() => new Usuario('Usuário', 18, '1234'))
+  const [usuario] = useState(() => new Administrador('Otávio', 'otavio@example.com'))
   const [tela, setTela] = useState<'login' | 'recuperacao' | 'banco'>('login')
   const [senhaTentativa, setSenhaTentativa] = useState('')
   const [nomeRecuperacao, setNomeRecuperacao] = useState('')
-  const [idadeRecuperacao, setIdadeRecuperacao] = useState('')
+  const [emailRecuperacao, setEmailRecuperacao] = useState('')
   const [novaSenha, setNovaSenha] = useState('')
   const [confirmarSenha, setConfirmarSenha] = useState('')
   const [mensagemAcesso, setMensagemAcesso] = useState('')
   const [tipoMensagemAcesso, setTipoMensagemAcesso] = useState<'sucesso' | 'erro' | ''>('')
-  const [area, setArea] = useState<'conta' | 'email'>('conta')
+  const [area, setArea] = useState<'conta' | 'email' | 'administrador'>('conta')
+  const [codigoSeguranca, setCodigoSeguranca] = useState(() => usuario.getCodigoSeguranca())
+  const [novoCodigoSeguranca, setNovoCodigoSeguranca] = useState('')
+  const [mensagemAdministrador, setMensagemAdministrador] = useState('')
+  const [tipoMensagemAdministrador, setTipoMensagemAdministrador] = useState<'sucesso' | 'erro' | ''>('')
   const [destinatario, setDestinatario] = useState('')
   const [assuntoEmail, setAssuntoEmail] = useState('')
   const [corpoEmail, setCorpoEmail] = useState('')
@@ -30,7 +34,7 @@ function App() {
   function entrar(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    if (!usuario.verificarSenha(senhaTentativa)) {
+    if (!usuario.autenticar(senhaTentativa)) {
       setMensagemAcesso('Senha incorreta. Tente novamente.')
       setTipoMensagemAcesso('erro')
       return
@@ -52,10 +56,12 @@ function App() {
     event.preventDefault()
 
     const nomeConfere = nomeRecuperacao.trim().toLocaleLowerCase('pt-BR')
-      === usuario.nome.toLocaleLowerCase('pt-BR')
+      === usuario.getNome().toLocaleLowerCase('pt-BR')
+    const emailConfere = emailRecuperacao.trim().toLocaleLowerCase('pt-BR')
+      === usuario.getEmail().toLocaleLowerCase('pt-BR')
 
-    if (!nomeConfere || Number(idadeRecuperacao) !== usuario.idade) {
-      setMensagemAcesso('Nome ou idade não conferem com o cadastro.')
+    if (!nomeConfere || !emailConfere) {
+      setMensagemAcesso('Nome ou e-mail não conferem com o cadastro.')
       setTipoMensagemAcesso('erro')
       return
     }
@@ -71,7 +77,7 @@ function App() {
       setTela('login')
       setSenhaTentativa('')
       setNomeRecuperacao('')
-      setIdadeRecuperacao('')
+      setEmailRecuperacao('')
       setNovaSenha('')
       setConfirmarSenha('')
       setMensagemAcesso('Senha redefinida. Entre com sua nova senha.')
@@ -134,16 +140,31 @@ function App() {
     }
   }
 
+  function alterarCodigoSeguranca(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    try {
+      usuario.alterarCodigoSeguranca(novoCodigoSeguranca)
+      setCodigoSeguranca(usuario.getCodigoSeguranca())
+      setNovoCodigoSeguranca('')
+      setMensagemAdministrador('Código de segurança atualizado.')
+      setTipoMensagemAdministrador('sucesso')
+    } catch (erro) {
+      setMensagemAdministrador(erro instanceof Error ? erro.message : 'Não foi possível alterar o código.')
+      setTipoMensagemAdministrador('erro')
+    }
+  }
+
   return (
     <main className="banking-app">
       <header className="topbar">
-        <a className="brand" href={tela === 'banco' ? '#inicio' : '#acesso'} aria-label="Conta Clara">
+        <a className="brand" href={tela === 'banco' ? '#inicio' : '#acesso'} aria-label="Conta GG">
           <span className="brand-mark" aria-hidden="true">C</span>
-          <span>conta<span className="brand-light">clara</span></span>
+          <span>conta<span className="brand-light">GG</span></span>
         </a>
         {tela === 'banco' ? (
           <button className="account-tag logout-button" type="button" onClick={sair}>
-            {usuario.nome} <span aria-hidden="true">↗</span>
+            {usuario.getNome()} <span aria-hidden="true">↗</span>
           </button>
         ) : (
           <span className="account-tag"><span className="status-dot" /> Acesso ao sistema</span>
@@ -168,6 +189,14 @@ function App() {
           onClick={() => { setArea('email'); setMensagemEmail(''); setTipoMensagemEmail('') }}
         >
           Enviar e-mail
+        </button>
+        <button
+          type="button"
+          className={area === 'administrador' ? 'workspace-tab active' : 'workspace-tab'}
+          aria-current={area === 'administrador' ? 'page' : undefined}
+          onClick={() => { setArea('administrador'); setMensagemAdministrador(''); setTipoMensagemAdministrador('') }}
+        >
+          Administrador
         </button>
       </nav>
       {area === 'conta' ? (
@@ -255,7 +284,7 @@ function App() {
           <p className="security-note"><span aria-hidden="true">◇</span> Operação segura e imediata</p>
         </section>
       </div>
-      ) : (
+      ) : area === 'email' ? (
         <div className="email-layout">
           <section className="email-intro" aria-labelledby="email-title">
             <p className="eyebrow">MENSAGENS <span> / </span> NOVO E-MAIL</p>
@@ -316,12 +345,56 @@ function App() {
             )}
           </section>
         </div>
+      ) : (
+        <div className="email-layout">
+          <section className="email-intro" aria-labelledby="admin-title">
+            <p className="eyebrow">ADMINISTRAÇÃO <span> / </span> SEGURANÇA</p>
+            <h1 id="admin-title">Acesso sob<br />seu controle.</h1>
+            <p className="intro">Consulte e atualize o código de segurança do administrador.</p>
+            <div className="email-note">
+              <span aria-hidden="true">◇</span>
+              <p>O código é usado apenas nesta demonstração e fica disponível enquanto a página permanecer aberta.</p>
+            </div>
+          </section>
+
+          <section className="email-panel admin-panel" aria-labelledby="admin-form-title">
+            <div className="transaction-heading">
+              <p className="eyebrow">CÓDIGO DE SEGURANÇA</p>
+              <h2 id="admin-form-title">Configurações do administrador</h2>
+            </div>
+            <div className="security-code-display">
+              <span>Código atual</span>
+              <strong aria-live="polite">{codigoSeguranca}</strong>
+            </div>
+            <form className="auth-form" onSubmit={alterarCodigoSeguranca}>
+              <label htmlFor="novo-codigo-seguranca">Novo código de segurança</label>
+              <input
+                id="novo-codigo-seguranca"
+                name="novoCodigoSeguranca"
+                type="password"
+                autoComplete="new-password"
+                value={novoCodigoSeguranca}
+                onChange={(event) => setNovoCodigoSeguranca(event.target.value)}
+                required
+              />
+              <button className="submit-button" type="submit">
+                Atualizar código <span aria-hidden="true">→</span>
+              </button>
+            </form>
+            {mensagemAdministrador && (
+              <p className={`feedback ${tipoMensagemAdministrador}`} role="status">
+                <span aria-hidden="true">{tipoMensagemAdministrador === 'sucesso' ? '✓' : '!'}</span>
+                {mensagemAdministrador}
+              </p>
+            )}
+          </section>
+        </div>
       )}
       </>
       ) : (
         <div className="auth-layout" id="acesso">
           <section className="auth-intro" aria-labelledby="auth-title">
-            <p className="eyebrow">CONTA CLARA <span> / </span> ACESSO SEGURO</p>
+            <p className="eyebrow">CONTA GG <span> / </span> ACESSO SEGURO</p>
             <h1 id="auth-title">
               {tela === 'login' ? <>Sua conta,<br />com você.</> : <>Vamos recuperar<br />seu acesso.</>}
             </h1>
@@ -332,8 +405,8 @@ function App() {
             </p>
             <div className="demo-profile">
               <span className="demo-label">PERFIL DE DEMONSTRAÇÃO</span>
-              <strong>{usuario.nome} <span>·</span> {usuario.idade} anos</strong>
-              {tela === 'login' && <p>Senha inicial: <b>1234</b></p>}
+              <strong>{usuario.getNome()} <span>·</span> {usuario.getEmail()}</strong>
+              {tela === 'login' && <p>Senha inicial: <b>123</b></p>}
             </div>
           </section>
 
@@ -380,15 +453,14 @@ function App() {
                     onChange={(event) => setNomeRecuperacao(event.target.value)}
                     required
                   />
-                  <label htmlFor="idade-recuperacao">Idade</label>
+                  <label htmlFor="email-recuperacao">E-mail cadastrado</label>
                   <input
-                    id="idade-recuperacao"
-                    name="idade"
-                    type="number"
-                    min="1"
-                    max="120"
-                    value={idadeRecuperacao}
-                    onChange={(event) => setIdadeRecuperacao(event.target.value)}
+                    id="email-recuperacao"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    value={emailRecuperacao}
+                    onChange={(event) => setEmailRecuperacao(event.target.value)}
                     required
                   />
                   <label htmlFor="nova-senha">Nova senha</label>
@@ -433,7 +505,7 @@ function App() {
         </div>
       )}
       <footer className="page-footer">
-        <span>CONTA CLARA <span className="footer-separator">/</span> SERVIÇOS FINANCEIROS</span>
+        <span>CONTA GG <span className="footer-separator">/</span> SERVIÇOS FINANCEIROS</span>
         <span>Simples assim.</span>
       </footer>
     </main>

@@ -2,8 +2,8 @@
 
 :root {
   font-family: 'DM Sans', sans-serif;
-  color: #31483f;
-  background: #f4f7f5;
+  color: #324a67;
+  background: #f4f7fb;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -29,6 +29,6 @@ input {
 }
 
 ::selection {
-  background: #d8f2a2;
-  color: #173e32;
+  background: #d9eaff;
+  color: #183f68;
 }
